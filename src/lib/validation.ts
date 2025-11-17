@@ -21,11 +21,19 @@ export const VeuveUpdateSchema = VeuveCreateSchema.partial()
 export const OrphelinCreateSchema = z.object({
   nom: z.string().min(1, 'Le nom est requis'),
   prenom: z.string().optional(),
-  dateNaissance: z.coerce.date({
-    required_error: 'La date de naissance est requise',
-  }),
+  dateNaissance: z.preprocess(
+    (val) => {
+      if (typeof val === 'string' && val.length === 0) {
+        return undefined
+      }
+      return val
+    },
+    z.coerce.date().refine((date) => !isNaN(date.getTime()), {
+      message: 'La date de naissance est requise',
+    })
+  ),
   veuveId: z.string().min(1, 'La veuve est requise'),
-  suiviScolaire: z.record(z.any()).optional(),
+  suiviScolaire: z.record(z.string(), z.any()).optional(),
   cloture: z.boolean().default(false),
 })
 
@@ -56,9 +64,17 @@ export const ParrainUpdateSchema = ParrainCreateSchema.partial()
 export const ParrainageCreateSchema = z.object({
   parrainId: z.string().min(1, 'Le parrain est requis'),
   orphelinId: z.string().min(1, "L'orphelin est requis"),
-  dateDebut: z.coerce.date({
-    required_error: 'La date de début est requise',
-  }),
+  dateDebut: z.preprocess(
+    (val) => {
+      if (typeof val === 'string' && val.length === 0) {
+        return undefined
+      }
+      return val
+    },
+    z.coerce.date().refine((date) => !isNaN(date.getTime()), {
+      message: 'La date de début est requise',
+    })
+  ),
   dateFin: z.coerce.date().optional().nullable(),
   valeurKafala: z.number().int().positive('La valeur Kafala doit être positive'),
 })
@@ -127,7 +143,7 @@ export const RecuCreateSchema = z.object({
   ice: z.string().optional(),
   total: z.number().int().positive('Le total doit être positif'),
   type: TypeSubventionSchema,
-  lignes: z.record(z.any()).optional(),
+  lignes: z.record(z.string(), z.any()).optional(),
   dateEmission: z.coerce.date().optional(),
 })
 
