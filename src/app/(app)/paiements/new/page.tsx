@@ -1,19 +1,7 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { PaiementCreateSchema } from '@/lib/validation'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
@@ -24,6 +12,15 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
   Table,
   TableBody,
   TableCell,
@@ -31,9 +28,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { PaiementCreateSchema } from '@/lib/validation'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 interface AllocationPreview {
   orphelinId: string
@@ -48,7 +48,7 @@ interface AllocationPreview {
   montantRestantEcheance: number
 }
 
-export default function NewPaiementPage() {
+function NewPaiementForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [parrains, setParrains] = useState<any[]>([])
@@ -389,5 +389,13 @@ export default function NewPaiementPage() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+export default function NewPaiementPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <NewPaiementForm />
+    </Suspense>
   )
 }
