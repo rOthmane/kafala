@@ -196,7 +196,11 @@ export default function NewPaiementPage() {
                     <FormLabel>Type</FormLabel>
                     <FormControl>
                       <select
-                        {...field}
+                        value={String(field.value ?? 'KAFALA')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       >
                         <option value="KAFALA">Kafala</option>
@@ -219,7 +223,11 @@ export default function NewPaiementPage() {
                     </FormLabel>
                     <FormControl>
                       <select
-                        {...field}
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       >
                         <option value="">Sélectionner un parrain</option>
@@ -244,8 +252,11 @@ export default function NewPaiementPage() {
                     <FormControl>
                       <Input
                         type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        value={Number(field.value) || 0}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                       />
                     </FormControl>
                     <FormMessage />
@@ -260,7 +271,14 @@ export default function NewPaiementPage() {
                   <FormItem>
                     <FormLabel>Date de paiement</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input
+                        type="date"
+                        value={field.value ? String(field.value) : ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

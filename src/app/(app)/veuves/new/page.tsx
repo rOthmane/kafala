@@ -75,7 +75,13 @@ export default function NewVeuvePage() {
                   <FormItem>
                     <FormLabel>Nom *</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -89,7 +95,13 @@ export default function NewVeuvePage() {
                   <FormItem>
                     <FormLabel>Prénom</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -103,7 +115,13 @@ export default function NewVeuvePage() {
                   <FormItem>
                     <FormLabel>CIN</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -117,7 +135,13 @@ export default function NewVeuvePage() {
                   <FormItem>
                     <FormLabel>RIB</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -131,7 +155,13 @@ export default function NewVeuvePage() {
                   <FormItem>
                     <FormLabel>Téléphone</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -145,7 +175,13 @@ export default function NewVeuvePage() {
                   <FormItem>
                     <FormLabel>Adresse</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

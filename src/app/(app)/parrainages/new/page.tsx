@@ -49,7 +49,10 @@ export default function NewParrainagePage() {
 
   useEffect(() => {
     if (selectedParrain && !form.getValues('valeurKafala')) {
-      form.setValue('valeurKafala', selectedParrain.valeurKafala)
+      const valeurKafala = typeof selectedParrain.valeurKafala === 'object' && 'toNumber' in selectedParrain.valeurKafala
+        ? selectedParrain.valeurKafala.toNumber()
+        : Number(selectedParrain.valeurKafala) || 0
+      form.setValue('valeurKafala', valeurKafala)
     }
   }, [selectedParrain, form])
 
@@ -101,7 +104,11 @@ export default function NewParrainagePage() {
                     <FormLabel>Parrain *</FormLabel>
                     <FormControl>
                       <select
-                        {...field}
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       >
                         <option value="">Sélectionner un parrain</option>
@@ -111,7 +118,11 @@ export default function NewParrainagePage() {
                             {new Intl.NumberFormat('fr-MA', {
                               style: 'currency',
                               currency: 'MAD',
-                            }).format(parrain.valeurKafala)}
+                            }).format(
+                              typeof parrain.valeurKafala === 'object' && 'toNumber' in parrain.valeurKafala
+                                ? parrain.valeurKafala.toNumber()
+                                : Number(parrain.valeurKafala) || 0
+                            )}
                           </option>
                         ))}
                       </select>
@@ -129,7 +140,11 @@ export default function NewParrainagePage() {
                     <FormLabel>Orphelin *</FormLabel>
                     <FormControl>
                       <select
-                        {...field}
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       >
                         <option value="">Sélectionner un orphelin</option>
@@ -152,7 +167,14 @@ export default function NewParrainagePage() {
                   <FormItem>
                     <FormLabel>Date début *</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input
+                        type="date"
+                        value={field.value ? String(field.value) : ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -168,8 +190,11 @@ export default function NewParrainagePage() {
                     <FormControl>
                       <Input
                         type="date"
-                        {...field}
-                        value={field.value || ''}
+                        value={field.value ? String(field.value) : ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                       />
                     </FormControl>
                     <FormMessage />
@@ -186,8 +211,11 @@ export default function NewParrainagePage() {
                     <FormControl>
                       <Input
                         type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        value={Number(field.value) || 0}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                       />
                     </FormControl>
                     <FormMessage />

@@ -122,7 +122,11 @@ export default function NewParrainPage() {
                     <FormLabel>Type *</FormLabel>
                     <FormControl>
                       <select
-                        {...field}
+                        value={String(field.value ?? 'PERSONNE_PHYSIQUE')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       >
                         <option value="PERSONNE_PHYSIQUE">Personne physique</option>
@@ -141,7 +145,13 @@ export default function NewParrainPage() {
                   <FormItem>
                     <FormLabel>Nom *</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -155,7 +165,13 @@ export default function NewParrainPage() {
                   <FormItem>
                     <FormLabel>Prénom</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -170,7 +186,13 @@ export default function NewParrainPage() {
                     <FormItem>
                       <FormLabel>CIN</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          value={String(field.value ?? '')}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -184,7 +206,13 @@ export default function NewParrainPage() {
                     <FormItem>
                       <FormLabel>ICE</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          value={String(field.value ?? '')}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -199,7 +227,14 @@ export default function NewParrainPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" {...field} />
+                      <Input
+                        type="email"
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -213,7 +248,13 @@ export default function NewParrainPage() {
                   <FormItem>
                     <FormLabel>Téléphone</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -227,7 +268,13 @@ export default function NewParrainPage() {
                   <FormItem>
                     <FormLabel>Adresse</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -243,8 +290,11 @@ export default function NewParrainPage() {
                     <FormControl>
                       <Input
                         type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        value={Number(field.value) || 0}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                       />
                     </FormControl>
                     <FormMessage />

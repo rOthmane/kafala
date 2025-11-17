@@ -1,10 +1,8 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ParrainUpdateSchema } from '@/lib/validation'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -14,10 +12,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ParrainUpdateSchema } from '@/lib/validation'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 export default function EditParrainPage({
   params,
@@ -62,7 +62,9 @@ export default function EditParrainPage({
           email: parrainData.email || '',
           tel: parrainData.tel || '',
           adresse: parrainData.adresse || '',
-          valeurKafala: parrainData.valeurKafala,
+          valeurKafala: typeof parrainData.valeurKafala === 'object' && 'toNumber' in parrainData.valeurKafala
+            ? parrainData.valeurKafala.toNumber()
+            : Number(parrainData.valeurKafala) || 0,
           donateurCode: parrainData.donateurCode || '',
           parrainCode: parrainData.parrainCode || '',
           estMembre: parrainData.estMembre,
@@ -158,7 +160,11 @@ export default function EditParrainPage({
                     <FormLabel>Type *</FormLabel>
                     <FormControl>
                       <select
-                        {...field}
+                        value={String(field.value ?? 'PERSONNE_PHYSIQUE')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       >
                         <option value="PERSONNE_PHYSIQUE">Personne physique</option>
@@ -177,7 +183,13 @@ export default function EditParrainPage({
                   <FormItem>
                     <FormLabel>Nom *</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -191,7 +203,13 @@ export default function EditParrainPage({
                   <FormItem>
                     <FormLabel>Prénom</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -206,7 +224,13 @@ export default function EditParrainPage({
                     <FormItem>
                       <FormLabel>CIN</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          value={String(field.value ?? '')}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -220,7 +244,13 @@ export default function EditParrainPage({
                     <FormItem>
                       <FormLabel>ICE</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          value={String(field.value ?? '')}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -235,7 +265,14 @@ export default function EditParrainPage({
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" {...field} />
+                      <Input
+                        type="email"
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -249,7 +286,13 @@ export default function EditParrainPage({
                   <FormItem>
                     <FormLabel>Téléphone</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -263,7 +306,13 @@ export default function EditParrainPage({
                   <FormItem>
                     <FormLabel>Adresse</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -279,8 +328,11 @@ export default function EditParrainPage({
                     <FormControl>
                       <Input
                         type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        value={Number(field.value) || 0}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                       />
                     </FormControl>
                     <FormMessage />

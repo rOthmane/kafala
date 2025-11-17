@@ -116,7 +116,13 @@ export default function EditOrphelinPage({
                   <FormItem>
                     <FormLabel>Nom *</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -130,7 +136,13 @@ export default function EditOrphelinPage({
                   <FormItem>
                     <FormLabel>Prénom</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -144,7 +156,14 @@ export default function EditOrphelinPage({
                   <FormItem>
                     <FormLabel>Date de naissance *</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input
+                        type="date"
+                        value={field.value ? String(field.value) : ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -159,7 +178,11 @@ export default function EditOrphelinPage({
                     <FormLabel>Veuve *</FormLabel>
                     <FormControl>
                       <select
-                        {...field}
+                        value={String(field.value ?? '')}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       >
                         <option value="">Sélectionner une veuve</option>

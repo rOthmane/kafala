@@ -42,7 +42,9 @@ export default function EditParrainagePage({
             dateFin: data.dateFin
               ? new Date(data.dateFin).toISOString().split('T')[0]
               : '',
-            valeurKafala: data.valeurKafala,
+            valeurKafala: typeof data.valeurKafala === 'object' && 'toNumber' in data.valeurKafala
+              ? data.valeurKafala.toNumber()
+              : Number(data.valeurKafala) || 0,
           })
           setLoading(false)
         })
@@ -119,7 +121,14 @@ export default function EditParrainagePage({
                   <FormItem>
                     <FormLabel>Date début *</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input
+                        type="date"
+                        value={field.value ? String(field.value) : ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -135,8 +144,11 @@ export default function EditParrainagePage({
                     <FormControl>
                       <Input
                         type="date"
-                        {...field}
-                        value={field.value || ''}
+                        value={field.value ? String(field.value) : ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                       />
                     </FormControl>
                     <FormMessage />
@@ -153,8 +165,11 @@ export default function EditParrainagePage({
                     <FormControl>
                       <Input
                         type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        value={Number(field.value) || 0}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
                       />
                     </FormControl>
                     <FormMessage />
