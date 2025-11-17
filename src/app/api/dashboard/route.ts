@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { calculateAge, isAlerte18 } from '@/lib/kafala'
-import type { Decimal } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 // Helper pour convertir Decimal en number
-function decimalToNumber(d: Decimal | number | string | null | undefined): number {
+function decimalToNumber(d: Prisma.Decimal | number | string | null | undefined): number {
   if (d === null || d === undefined) return 0
   if (typeof d === 'number') return d
   if (typeof d === 'string') return parseFloat(d)

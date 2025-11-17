@@ -105,8 +105,14 @@ export async function DELETE(
         })
 
         if (echeance) {
-          const nouveauMontantPaye = Math.max(0, echeance.montantPaye - alloc.montantAlloue)
-          const soldée = nouveauMontantPaye >= echeance.montantDu
+          const montantPayeNum = typeof echeance.montantPaye === 'object' && 'toNumber' in echeance.montantPaye
+            ? echeance.montantPaye.toNumber()
+            : Number(echeance.montantPaye) || 0
+          const montantDuNum = typeof echeance.montantDu === 'object' && 'toNumber' in echeance.montantDu
+            ? echeance.montantDu.toNumber()
+            : Number(echeance.montantDu) || 0
+          const nouveauMontantPaye = Math.max(0, montantPayeNum - alloc.montantAlloue)
+          const soldée = nouveauMontantPaye >= montantDuNum
 
           await prisma.echeance.update({
             where: { id: alloc.echeanceId },

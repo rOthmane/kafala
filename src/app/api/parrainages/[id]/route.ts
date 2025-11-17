@@ -71,7 +71,10 @@ export async function PATCH(
         (data.dateDebut && data.dateDebut.getTime() !== parrainageExistant.dateDebut.getTime()) ||
         (data.dateFin !== undefined && 
           (data.dateFin?.getTime() || null) !== (parrainageExistant.dateFin?.getTime() || null))
-      const valeurChanged = data.valeurKafala && data.valeurKafala !== parrainageExistant.valeurKafala
+      const valeurChanged = data.valeurKafala && 
+        (typeof parrainageExistant.valeurKafala === 'object' && 'toNumber' in parrainageExistant.valeurKafala
+          ? data.valeurKafala !== parrainageExistant.valeurKafala.toNumber()
+          : data.valeurKafala !== Number(parrainageExistant.valeurKafala))
 
       const parrainageMisAJour = await tx.parrainage.update({
         where: { id },

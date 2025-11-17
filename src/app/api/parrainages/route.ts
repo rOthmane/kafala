@@ -58,8 +58,18 @@ export async function GET(request: NextRequest) {
     const parrainagesAvecStats = parrainages.map((parrainage) => {
       const echeancesTotal = parrainage.echeances.length
       const echeancesSoldees = parrainage.echeances.filter((e) => e.soldée).length
-      const montantTotal = parrainage.echeances.reduce((sum, e) => sum + e.montantDu, 0)
-      const montantPaye = parrainage.echeances.reduce((sum, e) => sum + e.montantPaye, 0)
+      const montantTotal = parrainage.echeances.reduce((sum, e) => {
+        const montant = typeof e.montantDu === 'object' && 'toNumber' in e.montantDu
+          ? e.montantDu.toNumber()
+          : Number(e.montantDu) || 0
+        return sum + montant
+      }, 0)
+      const montantPaye = parrainage.echeances.reduce((sum, e) => {
+        const montant = typeof e.montantPaye === 'object' && 'toNumber' in e.montantPaye
+          ? e.montantPaye.toNumber()
+          : Number(e.montantPaye) || 0
+        return sum + montant
+      }, 0)
 
       return {
         ...parrainage,

@@ -1,9 +1,8 @@
 import { prisma } from './prisma'
-import type { Prisma, Decimal } from '@prisma/client'
-import { Prisma as PrismaNamespace } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 // Helper pour convertir Decimal en number
-function decimalToNumber(d: Decimal | number | string | null | undefined): number {
+function decimalToNumber(d: Prisma.Decimal | number | string | null | undefined): number {
   if (d === null || d === undefined) return 0
   if (typeof d === 'number') return d
   if (typeof d === 'string') return parseFloat(d)
@@ -11,8 +10,8 @@ function decimalToNumber(d: Decimal | number | string | null | undefined): numbe
 }
 
 // Helper pour créer un Decimal depuis un number
-function numberToDecimal(n: number): Decimal {
-  return new PrismaNamespace.Decimal(n)
+function numberToDecimal(n: number): Prisma.Decimal {
+  return new Prisma.Decimal(n)
 }
 
 /**
@@ -161,7 +160,7 @@ export async function recomputeEcheancesForParrain(
         soldée: false,
       },
       data: {
-        montantDu: new PrismaNamespace.Decimal(montantParOrphelin),
+        montantDu: new Prisma.Decimal(montantParOrphelin),
       },
     })
   }
@@ -174,7 +173,7 @@ export async function recomputeEcheancesForParrain(
 export async function generateEcheances(
   parrainageId: string,
   dateDebut: Date,
-  valeurKafala: number | Decimal,
+  valeurKafala: number | Prisma.Decimal,
   nombreParrainages: number,
   dateFin?: Date | null,
   tx?: Omit<Prisma.TransactionClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>
@@ -211,7 +210,7 @@ export async function generateEcheances(
     data: echeances.map(e => ({
       parrainageId: e.parrainageId,
       mois: e.mois,
-      montantDu: new PrismaNamespace.Decimal(e.montantDu),
+      montantDu: new Prisma.Decimal(e.montantDu),
     })),
     skipDuplicates: true,
   })
@@ -224,7 +223,7 @@ export async function generateEcheances(
  */
 export async function allocateKafalaPayment(
   parrainId: string,
-  montant: number | Decimal,
+  montant: number | Prisma.Decimal,
   tx?: Omit<Prisma.TransactionClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>
 ): Promise<{
   allocations: Array<{
@@ -360,7 +359,7 @@ export async function allocateKafalaPayment(
           await client.echeance.update({
             where: { id: echeance.id },
             data: {
-              montantPaye: new PrismaNamespace.Decimal(nouveauMontantPaye),
+              montantPaye: new Prisma.Decimal(nouveauMontantPaye),
               soldée,
             },
           })
@@ -392,7 +391,7 @@ export async function allocateKafalaPayment(
  */
 export function allocatePaiementFIFO(
   montant: number,
-  echeances: Array<{ id: string; mois: Date; montantDu: Decimal | number; montantPaye: Decimal | number; soldée: boolean }>
+  echeances: Array<{ id: string; mois: Date; montantDu: Prisma.Decimal | number; montantPaye: Prisma.Decimal | number; soldée: boolean }>
 ): Array<{ echeanceId: string; montantAlloue: number }> {
   const allocation: Array<{ echeanceId: string; montantAlloue: number }> = []
   let montantRestant = montant

@@ -42,7 +42,12 @@ export async function GET(request: NextRequest) {
       adresse: veuve.adresse,
       cloturee: veuve.cloturee,
       nombreOrphelins: veuve.orphelins.length,
-      totalPaiements: veuve.paiements.reduce((sum, p) => sum + p.montant, 0),
+      totalPaiements: veuve.paiements.reduce((sum, p) => {
+        const montant = typeof p.montant === 'object' && 'toNumber' in p.montant
+          ? p.montant.toNumber()
+          : Number(p.montant) || 0
+        return sum + montant
+      }, 0),
       createdAt: veuve.createdAt,
       updatedAt: veuve.updatedAt,
     }))
