@@ -1,0 +1,163 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TypeParrain {
+  PERSONNE_PHYSIQUE
+  SOCIETE
+}
+
+enum TypeSubvention {
+  KAFALA
+  DAAM_MADRASSI
+  AUTRE
+}
+
+enum Role {
+  ADMIN
+  OPERATEUR
+  LECTURE
+}
+
+model Utilisateur {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  hash      String
+  role      Role     @default(OPERATEUR)
+  createdAt DateTime @default(now())
+}
+
+model Veuve {
+  id        String     @id @default(cuid())
+  nom       String
+  prenom    String?
+  cin       String?    @map("CIN") // ancien "N° de référence" => CIN
+  rib       String?
+  tel       String?
+  adresse   String?
+  cloturee  Boolean    @default(false) // Remplace la doc “Mettre non à Kafala”
+  paiements Paiement[]
+  orphelins Orphelin[]
+  virements Virement[] // via relation
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Orphelin {
+  id            String       @id @default(cuid())
+  nom           String
+  prenom        String?
+  dateNaissance DateTime
+  ageCache      Int? // recalculé via trigger/app (vue affiche calcul auto)
+  suiviScolaire Json? // notes/bulletins/liens
+  veuveId       String
+  veuve         Veuve        @relation(fields: [veuveId], references: [id])
+  cloture       Boolean      @default(false)
+  parrainages   Parrainage[] // relations historiques
+  paiements     Paiement[] // via bénéficiaire
+  virements     Virement[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Parrain {
+  id                String       @id @default(cuid())
+  type              TypeParrain  @default(PERSONNE_PHYSIQUE)
+  nom               String
+  prenom            String?
+  cin               String?      @map("CIN")
+  ice               String? // si SOCIETE (affiché aussi dans reçus)
+  email             String?
+  tel               String?
+  adresse           String?
+  valeurKafala      Decimal      @db.Decimal(10, 2) // exigée à la création du profil
+  nombreParrainages Int          @default(1) // nombre de parrainages actifs
+  donateurCode      String? // identifiant donateur (distinct)
+  parrainCode       String? // identifiant parrain (distinct)
+  estMembre         Boolean      @default(false)
+  estDonateur       Boolean      @default(true)
+  estParrain        Boolean      @default(true)
+  parrainages       Parrainage[]
+  paiements         Paiement[]
+  recus             Recu[]
+  virements         Virement[]
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model Parrainage {
+  id           String     @id @default(cuid())
+  parrainId    String
+  orphelinId   String
+  dateDebut    DateTime
+  dateFin      DateTime?
+  valeurKafala Decimal    @db.Decimal(10, 2) // copie par défaut depuis Parrain.valeurKafala, modifiable
+  parrain      Parrain    @relation(fields: [parrainId], references: [id])
+  orphelin     Orphelin   @relation(fields: [orphelinId], references: [id])
+  echeances    Echeance[]
+  // Historiser l'ancien kafil: nouveaux enregistrements au changement de parrain
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([orphelinId, dateDebut])
+  @@index([parrainId, dateDebut])
+}
+
+model Echeance {
+  id           String     @id @default(cuid())
+  parrainageId String
+  mois         DateTime // 1er jour du mois
+  montantDu    Decimal    @db.Decimal(10, 2)
+  montantPaye  Decimal    @db.Decimal(10, 2) @default(0)
+  soldée      Boolean    @default(false)
+  parrainage   Parrainage @relation(fields: [parrainageId], references: [id])
+}
+
+model Paiement {
+  id           String         @id @default(cuid())
+  parrainId    String? // peut exister sans orphelin (don global)
+  orphelinId   String?
+  veuveId      String?
+  type         TypeSubvention @default(KAFALA)
+  montant      Decimal        @db.Decimal(10, 2)
+  datePaiement DateTime       @default(now())
+  recuId       String?
+  allocation   Json? // détail d'affectation sur échéances
+  parrain      Parrain?       @relation(fields: [parrainId], references: [id])
+  orphelin     Orphelin?      @relation(fields: [orphelinId], references: [id])
+  veuve        Veuve?         @relation(fields: [veuveId], references: [id])
+  recu         Recu?          @relation(fields: [recuId], references: [id])
+}
+
+model Recu {
+  id           String         @id @default(cuid())
+  numero       String         @unique
+  parrainId    String?
+  ice          String? // remplir si société
+  total        Int
+  type         TypeSubvention
+  lignes       Json // contient échéances payées & restantes
+  dateEmission DateTime       @default(now())
+  paiements    Paiement[]
+  parrain      Parrain?       @relation(fields: [parrainId], references: [id])
+}
+
+model Virement {
+  id           String   @id @default(cuid())
+  veuveId      String
+  orphelinId   String
+  parrainId    String
+  valeurKafala Int
+  nbMois       Int
+  dateVirement DateTime @default(now())
+  veuve        Veuve    @relation(fields: [veuveId], references: [id])
+  orphelin     Orphelin @relation(fields: [orphelinId], references: [id])
+  parrain      Parrain  @relation(fields: [parrainId], references: [id])
+}
