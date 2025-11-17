@@ -96,7 +96,7 @@ export async function DELETE(
     })
 
     if (paiement && paiement.allocation && typeof paiement.allocation === 'object') {
-      const allocation = paiement.allocation as Array<{ echeanceId: string; montantAlloue: number }>
+      const allocation = paiement.allocation as unknown as Array<{ echeanceId: string; montantAlloue: number }>
 
       // Inverser l'allocation sur les échéances
       for (const alloc of allocation) {

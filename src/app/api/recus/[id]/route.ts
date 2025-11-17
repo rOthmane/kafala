@@ -63,7 +63,10 @@ export async function PATCH(
 
     const recu = await prisma.recu.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        lignes: data.lignes as any,
+      },
       include: {
         parrain: true,
         paiements: true,

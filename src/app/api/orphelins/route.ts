@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
         veuve: orphelin.veuve,
         parrainActuel: orphelin.parrainages[0]?.parrain || null,
         cloture: orphelin.cloture,
-        suiviScolaire: orphelin.suiviScolaire,
+        suiviScolaire: orphelin.suiviScolaire as any,
         createdAt: orphelin.createdAt,
         updatedAt: orphelin.updatedAt,
       }
@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
       data: {
         ...data,
         ageCache: calculateAge(data.dateNaissance),
+        suiviScolaire: data.suiviScolaire as any,
       },
       include: {
         veuve: true,

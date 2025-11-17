@@ -46,19 +46,19 @@ async function calculateEncaissementsParMoisEcheance(): Promise<Map<string, numb
 
   const encaissementsParMois = new Map<string, number>()
 
-  for (const paiement of paiements) {
-    // Si le paiement a une allocation, utiliser les allocations
-    if (paiement.allocation && Array.isArray(paiement.allocation)) {
-      const allocations = paiement.allocation as AllocationItem[]
-      for (const alloc of allocations) {
-        const moisEcheance = formatMois(alloc.mois)
-        const montant = alloc.montantAffecte || 0
+      for (const paiement of paiements) {
+        // Si le paiement a une allocation, utiliser les allocations
+        if (paiement.allocation && Array.isArray(paiement.allocation)) {
+          const allocations = paiement.allocation as unknown as AllocationItem[]
+          for (const alloc of allocations) {
+            const moisEcheance = formatMois(alloc.mois)
+            const montant = alloc.montantAffecte || 0
 
-        // Ajouter le montant alloué à ce mois d'échéance
-        const total = encaissementsParMois.get(moisEcheance) || 0
-        encaissementsParMois.set(moisEcheance, total + montant)
-      }
-    } else {
+            // Ajouter le montant alloué à ce mois d'échéance
+            const total = encaissementsParMois.get(moisEcheance) || 0
+            encaissementsParMois.set(moisEcheance, total + montant)
+          }
+        } else {
       // Fallback : utiliser datePaiement pour les anciens paiements sans allocation
       // On considère que le paiement finance le mois de paiement
       const moisPaiement = formatMois(paiement.datePaiement)

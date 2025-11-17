@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
         ...data,
         numero,
         dateEmission: data.dateEmission || new Date(),
+        lignes: data.lignes as any,
       },
       include: {
         parrain: true,

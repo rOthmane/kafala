@@ -35,7 +35,7 @@ export default async function PaiementDetailPage({
 
   const allocation =
     paiement.allocation && typeof paiement.allocation === 'object'
-      ? (paiement.allocation as Array<{
+      ? (paiement.allocation as unknown as Array<{
           echeanceId: string
           montantAlloue: number
         }>)

@@ -200,6 +200,7 @@ export async function PATCH(
 
         // Récupérer valeurKafala pour génération des échéances
         const valeurKafalaPourEcheances = updateData.valeurKafala || parrainMisAJour.valeurKafala
+        const maintenant = new Date()
 
         // Générer les échéances pour tous les nouveaux parrainages actifs
         const nouveauxParrainages = await tx.parrainage.findMany({
